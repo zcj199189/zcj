@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jixiang.dao.UserRegisterDao">
+
+<select id="queryModelUserRegister" resultType="com.jixiang.model.UserRegister" >
+select t.id as "id",t.phone as "phone",t.password as "password",
+t.status as "status",t.reg_ip as "regIp",t.out_user_id as "outUserId",t.out_date_created as "outDateCreated",
+t.crt_time as "crtTime",t.upd_time as "updTime",t.txn_pwd as "txnPwd",t.app_version as "appVersion",
+t.device_id as "deviceId",t.wx_openid as "wxOpenid",t.from_channel as "fromChannel",t.pwd_type as "pwdType",
+t.user_name as "userName",t.is_real_name as "isRealName",t.md5_phone as "md5Phone",t.source as "source",
+t.channel as "channel",t.activity as "activity",t.from_type as "fromType",t.customer_confirm_time as "customerConfirmTime",
+t.tp_customer_id as "tpCustomerId"
+ from user_register t 
+ where t.user_name=#{userName}
+</select>
+
+
+</mapper>
