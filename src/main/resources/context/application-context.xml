@@ -4,5 +4,6 @@
 
 
 <import resource="classpath:context/applicationContext-ds.xml" />
+<import resource="classpath:/context/redis/*.xml" />
 
 </beans>

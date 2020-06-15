@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd ">
+	<bean id="genericJackson2JsonRedisSerializer"
+		class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+	<cache:annotation-driven
+		proxy-target-class="true" />
+	<bean id="cacheManager"
+		class="org.springframework.data.redis.cache.RedisCacheManager">
+		<constructor-arg ref="redisTemplate" />
+		<property name="expires">
+			<map>
+				<entry key="orderPayment" value="7200" />
+				<entry key="workOrder" value="7200" />
+				<entry key="monthOrderManager" value="7200" />
+				<entry key="orderPaymentInformation" value="7200" />
+				<entry key="contentProviderToken" value="259200" />
+				<entry key="woPayToken" value="259000" />
+				<entry key="webPay" value="259000" />
+				<entry key="goodsRule" value="259000" />
+				<entry key="applicationRiskRule" value="2764800" />
+				<entry key="contentProviderRiskRule" value="2764800" />
+				<entry key="supplierRiskRule" value="2764800" />
+				<entry key="goodRiskRule" value="2764800" />
+				<entry key="blackList" value="604800" />
+			</map>
+		</property>
+	</bean>
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="50"></property>
+		<property name="maxTotal" value="100"></property>
+		<property name="maxWaitMillis" value="20000"></property>
+	</bean>
+	<bean id="sentinelConfig"
+		class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+		<property name="master">
+			<bean
+				class="org.springframework.data.redis.connection.RedisNode">
+				<property name="name" value="mymaster"></property>
+			</bean>
+		</property>
+		<property name="sentinels">
+			<set>
+				<bean
+					class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg name="host" value="192.168.48.133"></constructor-arg>
+					<constructor-arg name="port" value="26379"></constructor-arg>
+				</bean>
+				<bean
+					class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg name="host" value="192.168.48.134"></constructor-arg>
+					<constructor-arg name="port" value="26380"></constructor-arg>
+				</bean>
+				<bean
+					class="org.springframework.data.redis.connection.RedisNode">
+					<constructor-arg name="host" value="192.168.48.135"></constructor-arg>
+					<constructor-arg name="port" value="26381"></constructor-arg>
+				</bean>
+			</set>
+		</property>
+	</bean>
+	<bean id="jedisConnFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="poolConfig" ref="poolConfig"></property>
+		<constructor-arg name="sentinelConfig"
+			ref="sentinelConfig"></constructor-arg>
+	</bean>
+	<bean id="stringRedisSerializer"
+		class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+	<bean id="redisTemplate"
+		class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory" ref="jedisConnFactory"></property>
+		<property name="keySerializer" ref="stringRedisSerializer"></property>
+		<property name="valueSerializer"
+			ref="genericJackson2JsonRedisSerializer"></property>
+	</bean>
+</beans>
