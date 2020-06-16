@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration scan="true" scanPeriod="60 seconds"
+	debug="false">
+
+	<contextName>app-user</contextName>
+
+	<property name="log.path" value="/opt/log" />
+	<property name="log.maxHistory" value="15" />
+	<property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}.%M-%line %msg%n" />
+
+	<!--输出到文件 -->
+	<appender name="file_info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.path}/app-user/app-user.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<MaxHistory>${log.maxHistory}</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>${log.pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}.%M-%line %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="java.sql.Connection" level="debug" />
+	<logger name="java.sql.Statement" level="debug" />
+	<logger name="java.sql.PreparedStatement" level="debug" />
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
