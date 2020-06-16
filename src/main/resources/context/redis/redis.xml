@@ -6,12 +6,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
 	  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd ">
-	<bean id="genericJackson2JsonRedisSerializer"
-		class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
-	<cache:annotation-driven
-		proxy-target-class="true" />
-	<bean id="cacheManager"
-		class="org.springframework.data.redis.cache.RedisCacheManager">
+	<!-- 点击上面的链接如果访问出错，就加减路径后面的空格 -->
+	<bean id="genericJackson2JsonRedisSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+	<cache:annotation-driven proxy-target-class="true" />
+	<!-- 缓存管理器 -->
+	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
 		<constructor-arg ref="redisTemplate" />
 		<property name="expires">
 			<map>
@@ -36,47 +35,44 @@
 		<property name="maxTotal" value="100"></property>
 		<property name="maxWaitMillis" value="20000"></property>
 	</bean>
-	<bean id="sentinelConfig"
-		class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+	<bean id="sentinelConfig" class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
 		<property name="master">
-			<bean
-				class="org.springframework.data.redis.connection.RedisNode">
+			<bean class="org.springframework.data.redis.connection.RedisNode">
 				<property name="name" value="mymaster"></property>
 			</bean>
 		</property>
+		<!-- 配置哨兵服务 -->
 		<property name="sentinels">
 			<set>
-				<bean
-					class="org.springframework.data.redis.connection.RedisNode">
+				<bean class="org.springframework.data.redis.connection.RedisNode">
 					<constructor-arg name="host" value="192.168.48.133"></constructor-arg>
 					<constructor-arg name="port" value="26379"></constructor-arg>
 				</bean>
-				<bean
-					class="org.springframework.data.redis.connection.RedisNode">
+				<bean class="org.springframework.data.redis.connection.RedisNode">
 					<constructor-arg name="host" value="192.168.48.134"></constructor-arg>
 					<constructor-arg name="port" value="26380"></constructor-arg>
 				</bean>
-				<bean
-					class="org.springframework.data.redis.connection.RedisNode">
+				<bean class="org.springframework.data.redis.connection.RedisNode">
 					<constructor-arg name="host" value="192.168.48.135"></constructor-arg>
 					<constructor-arg name="port" value="26381"></constructor-arg>
 				</bean>
 			</set>
 		</property>
 	</bean>
-	<bean id="jedisConnFactory"
-		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+	<!-- 配置redis连接工厂 -->
+	<bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<!-- 连接池配置 -->
 		<property name="poolConfig" ref="poolConfig"></property>
-		<constructor-arg name="sentinelConfig"
-			ref="sentinelConfig"></constructor-arg>
+		<!-- 配置哨兵 -->
+		<constructor-arg name="sentinelConfig" ref="sentinelConfig"></constructor-arg>
 	</bean>
-	<bean id="stringRedisSerializer"
-		class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-	<bean id="redisTemplate"
-		class="org.springframework.data.redis.core.StringRedisTemplate">
+	<!-- 配置序列化的方式 -->
+	<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<!-- 配置连接工厂 -->
 		<property name="connectionFactory" ref="jedisConnFactory"></property>
+		<!-- 修改键的序列化器 -->
 		<property name="keySerializer" ref="stringRedisSerializer"></property>
-		<property name="valueSerializer"
-			ref="genericJackson2JsonRedisSerializer"></property>
+		<property name="valueSerializer" ref="genericJackson2JsonRedisSerializer"></property>
 	</bean>
 </beans>
