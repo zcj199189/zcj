@@ -20,7 +20,6 @@ import com.jixiang.service.JMSSender;
 import com.jixiang.service.RedisService;
 import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.Jedis;
-
 //http://localhost:8080/swagger-ui.html#/
 @Controller("userController")
 public class UserController {
