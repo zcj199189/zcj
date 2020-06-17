@@ -18,7 +18,6 @@ import com.jixiang.dao.UserRegisterDao;
 import com.jixiang.model.UserRegister;
 import com.jixiang.service.JMSSender;
 import com.jixiang.service.RedisService;
-
 import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.Jedis;
 
