@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd">
+	
+	<bean id="mq" class="com.rabbitmq.jms.admin.RMQConnectionFactory">
+		<property name="host" value="192.168.48.133"/>
+		<property name="port" value="5672"/>
+		<property name="username" value="ant"/>
+		<property name="password" value="123456"/>
+	</bean>
+	
+	<!-- <bean id="crstibcoConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="mq"/>
+	</bean>	 -->
+		
+	<bean id="ifsQuartzJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="mq" />
+		<property name="sessionTransacted" value="true" />
+		<property name="sessionAcknowledgeModeName" value="SESSION_TRANSACTED" />
+		<property name="destinationResolver" ref="dynamicDestinationResolver"/>
+	</bean>
+
+	<bean id="dynamicDestinationResolver" class="org.springframework.jms.support.destination.DynamicDestinationResolver"/>
+</beans>

@@ -1,7 +1,8 @@
 package com.jixiang.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.alibaba.fastjson.JSON;
 import com.jixiang.dao.UserRegisterDao;
 import com.jixiang.model.UserRegister;
+import com.jixiang.service.JMSSender;
 import com.jixiang.service.RedisService;
 
 import io.swagger.annotations.ApiOperation;
 import redis.clients.jedis.Jedis;
+
+
 //http://localhost:8080/swagger-ui.html#/
 @Controller("userController")
 public class UserController {
@@ -29,6 +33,18 @@ public class UserController {
 	RedisService redis;
 	@Autowired
 	private JedisConnectionFactory jedisConnectionFactory;
+	@Autowired
+	private JMSSender jmsSender;
+	
+	@RequestMapping(value = "/tryJms", method = RequestMethod.POST)
+	@ResponseBody
+	@ApiOperation(value = "测试队列", notes = "--")
+	public String tryJms(@RequestParam("name") String name) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("name", name);
+		jmsSender.sendTextMessage("zcj", JSON.toJSONString(map));
+		return "发送成功";
+	}
 	
 	//method = RequestMethod.POST不能忘记声明，不然swagger会很多这个方法
 	@RequestMapping(value = "/getUser", method = RequestMethod.POST)
