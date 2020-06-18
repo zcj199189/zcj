@@ -4,7 +4,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 public class Send {
-    private final static String QUEUE_NAME = "qq";  
+    private final static String QUEUE_NAME = "zcj";  
 
     public static void main(String[] args) throws Exception {  
         ConnectionFactory factory = new ConnectionFactory();  

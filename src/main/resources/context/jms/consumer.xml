@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+	http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+ 
+	<!-- 配置连接工厂 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="192.168.48.133" port="5672" username="ant" password="123456" />
+ 
+	<!-- 定义mq管理 -->
+	<rabbit:admin connection-factory="connectionFactory" />
+ 
+	<!-- 声明队列 -->
+	<rabbit:queue name="user" auto-declare="true" durable="true" />
+ 
+	<!-- 定义消费者 -->
+	<bean name="catHandler" class="com.jixiang.service.NewsConsumer" />
+ 
+	<!-- 定义消费者监听队列 -->
+	<rabbit:listener-container connection-factory="connectionFactory">
+		<rabbit:listener ref="catHandler" queues="user" />
+	</rabbit:listener-container>
+ 
+</beans>

@@ -39,7 +39,7 @@ public class UserController {
 	public String tryJms(@RequestParam("name") String name) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("name", name);
-		jmsSender.sendTextMessage("zcj", JSON.toJSONString(map));
+		jmsSender.sendTextMessage("user", JSON.toJSONString(map));
 		return "发送成功";
 	}
 	
